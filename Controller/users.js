@@ -5,7 +5,8 @@ const appLogger = require("../Services/appLogger"),
   validator = require("../Utils/validator"),
   userModel = require("../Models/user"),
   jwt = require("jsonwebtoken"),
-  { Password } = require("../Services/password");
+  { Password } = require("../Services/password"),
+  appLogger = require("../services/appLogger");
 
 module.exports.signup = async (req, res) => {
   try {
@@ -32,8 +33,11 @@ module.exports.signup = async (req, res) => {
       return;
     }
     const { name, contactNo, email, password } = req.body;
-    const existingUser = userModel.findOne({ Email: email });
-    if (existingUser) {
+    const existingUser = userModel.findOne({ Email: email }).lean();
+    appLogger.debug(
+      `Inside signup===> ${email} is in use ${!isEmpty(existingUser)}`
+    );
+    if (!isEmpty(existingUser)) {
       throw new Error("Email in use");
     }
     const user = new userModel({

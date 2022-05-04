@@ -1,0 +1,13 @@
+### Normal Routes
+GET https://asal-review-backend.herokuapp.com/
+
+### Create a new user
+POST https://asal-review-backend.herokuapp.com/user/signup
+Content-Type: application/json
+
+{
+    "email": "saurabh@asalreviews.com",
+    "password": "Welcome@2",
+    "name": "Saurabh Singh",
+    "contactNo": "9111123321"
+}
