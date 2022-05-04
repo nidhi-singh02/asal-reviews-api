@@ -32,7 +32,7 @@ module.exports.signup = async (req, res) => {
       return;
     }
     const { name, contactNo, email, password } = req.body;
-    const existingUser = userModel.findOne({ Email: email }).lean();
+    const existingUser = await userModel.findOne({ Email: email }).lean();
     console.log(
       `Inside signup===> ${email} is in use ${!isEmpty(existingUser)}`
     );
