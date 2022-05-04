@@ -5,8 +5,7 @@ const appLogger = require("../Services/appLogger"),
   validator = require("../Utils/validator"),
   userModel = require("../Models/user"),
   jwt = require("jsonwebtoken"),
-  { Password } = require("../Services/password"),
-  appLogger = require("../services/appLogger");
+  { Password } = require("../Services/password");
 
 module.exports.signup = async (req, res) => {
   try {
