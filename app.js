@@ -26,7 +26,7 @@ app.use(
 app.use("/", userRoutes);
 
 app.all("*", async (req, res) => {
-  throw new Error("Not Found");
+  res.status(200).send("Welcome to Asal Reviews");
 });
 
 app.use((err, req, res, next) => {
@@ -38,8 +38,8 @@ app.use((err, req, res, next) => {
     errors: [{ message: "Something went wrong" }],
   });
 });
-
-http.createServer(app).listen(8196);
+const port = process.env.PORT || 5000;
+http.createServer(app).listen(port);
 console.log("Listening");
 
 module.exports = app;
