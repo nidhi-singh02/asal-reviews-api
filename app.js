@@ -6,6 +6,7 @@ const express = require("express"),
   expressValidator = require("express-validator"),
   cookieSession = require("cookie-session"),
   userRoutes = require("./Routers/route");
+require("dotenv").config();
 
 app.use(cors());
 app.use(expressValidator());

@@ -1,4 +1,5 @@
 const appLogger = require("../Services/appLogger"),
+  { nanoid } = require("nanoid"),
   database = require("../Services/dbconnect"),
   validator = require("../Utils/validator"),
   reviewModel = require("../Models/review");
@@ -30,7 +31,7 @@ module.exports.createReview = async (req, res) => {
     let id = req.body.UserId + makeid(5);
     console.log(id, "MAKEID");
 
-    const reviewId = parseInt(id);
+    const reviewId = nanoid();
     let obj = req.body;
     obj.reviewId = reviewId;
     let reviewObj = new reviewModel(obj);

@@ -130,6 +130,7 @@ module.exports.signin = async (req, res) => {
 
 module.exports.signout = async (req, res) => {
   try {
+    console.log("Inside signout===> Request Received");
     req.session = null;
     res.send({});
   } catch (error) {
@@ -144,7 +145,10 @@ module.exports.getUser = async (req, res) => {
     console.log("######## Inside  getUser #########");
     let { id } = req.params;
     let user = {};
-    user = await userModel.findOne({ UserId: id });
+    user = await userModel
+      .findOne({ UserId: id })
+      .select("-_id -Hashed_Password -createdAt -updatedAt -__v")
+      .lean();
     res.send({
       status: 200,
       message: "success",
