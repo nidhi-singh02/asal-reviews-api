@@ -2,40 +2,40 @@
 GET https://asal-review-backend.herokuapp.com/
 
 ### Create a new user
-#POST https://asal-review-backend.herokuapp.com/user/signup
-POST http://localhost:5000/user/signup
+POST https://asal-review-backend.herokuapp.com/user/signup
+#POST http://localhost:5000/user/signup
 Content-Type: application/json
 
 {
-    "email": "saurabh@asalreviews.com",
+    "email": "sid@asalreviews.com",
     "password": "Welcome@2",
-    "name": "Saurabh Singh",
+    "name": "Sid Sam",
     "contactNo": "9111123321"
 }
 
 ### Logout a user
 
-#GET https://asal-review-backend.herokuapp.com/user/signup
-GET https://localhost:5000/user/singout
+GET https://asal-review-backend.herokuapp.com/user/singout
+#GET https://localhost:5000/user/singout
 
 ### Sigin user
-#POST https://asal-review-backend.herokuapp.com/user/signin
-POST http://localhost:5000/user/signin
+POST https://asal-review-backend.herokuapp.com/user/signin
+#POST http://localhost:5000/user/signin
 Content-Type: application/json
 
 {
-    "email": "saurabh@asalreviews.com",
+    "email": "john@asalreviews.com",
     "password": "Welcome@2"
 }
 
 ### Get user id
-#GET https://asal-review-backend.herokuapp.com/user/getUser/qX8BHnDUSmBnE56OZMeUL
-GET http://localhost:5000/user/getUser/qX8BHnDUSmBnE56OZMeUL
+GET https://asal-review-backend.herokuapp.com/user/getUser/hioJ6tswYrNb8A9BpzagR
+#GET http://localhost:5000/user/getUser/qX8BHnDUSmBnE56OZMeUL
 
 
 ### Create Reviews
-#POST https://asal-review-backend.herokuapp.com/user/createReview
-POST http://localhost:5000/user/createReview
+POST https://asal-review-backend.herokuapp.com/user/createReview
+#POST http://localhost:5000/user/createReview
 Content-Type: application/json
 
 {
@@ -47,8 +47,8 @@ Content-Type: application/json
 }
 
 ### Get a review
-#POST https://asal-review-backend.herokuapp.com/user/getReview
-POST http://localhost:5000/user/getReview
+POST https://asal-review-backend.herokuapp.com/user/getReview
+#POST http://localhost:5000/user/getReview
 Content-Type: application/json
 
 {
