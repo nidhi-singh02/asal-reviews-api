@@ -1,20 +1,20 @@
+const invoke = require("../invoke");
 const appLogger = require("../Services/appLogger"),
   { nanoid } = require("nanoid"),
   database = require("../Services/dbconnect"),
   validator = require("../Utils/validator"),
   reviewModel = require("../Models/review");
-//invoke = require('../invoke'),
-//query = require('../query'),
-(channelID = "review"), (chaincodeID = "review");
+const query = require('../query');
+let channelID = "review", chaincodeID = "review";
 
 module.exports.createReview = async (req, res) => {
   try {
     console.log("######## Inside Create Review #########");
     req.checkBody("rating", "Please provide Rating").notEmpty();
     req.checkBody("content", "Please enter your Content").notEmpty();
-    req.checkBody("UserId", "UserId is required").notEmpty();
+    req.checkBody("userID", "userID is required").notEmpty();
     req.checkBody("serviceprovider", "serviceprovider is required").notEmpty();
-    req.checkBody("productName", "Product Name is required").notEmpty();
+    req.checkBody("product", "Product Name is required").notEmpty();
     let validationResult = await validator(req);
     if (!validationResult.status) {
       res.status(422).json({
@@ -25,20 +25,34 @@ module.exports.createReview = async (req, res) => {
       return;
     }
     const timeStamp = Date.now();
-    req.body.createdTs = timeStamp.toString();
-    req.body.updateTs = timeStamp.toString();
+    req.body.cts = timeStamp.toString();
+    req.body.uts = timeStamp.toString();
+    req.body.createdBy = "asalreview"
 
-    let id = req.body.UserId + makeid(5);
+    let id = req.body.userID + makeid(5);
     console.log(id, "MAKEID");
 
     const reviewId = nanoid();
     let obj = req.body;
-    obj.reviewId = reviewId;
+    obj.reviewID =  id //reviewId;
+
     let reviewObj = new reviewModel(obj);
-    await reviewObj.save();
+
+   let data = await invoke.invoke(channelID,chaincodeID,'CreateReview',req.body)
+   
+   if (data != ""){
+    return res.status(500).send({
+        status: 500,
+        message: "Error from CC :"+data
+    });
+   }
+
+   //Inserting into mongo
+   await reviewObj.save();
+
     return res.status(200).send({
       status: 200,
-      message: "Review Saved Successfully",
+      message: "Review saved successfully with reviewID :"+id,
     });
   } catch (error) {
     console.log(error);
