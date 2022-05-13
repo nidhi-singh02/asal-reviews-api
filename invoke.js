@@ -42,8 +42,14 @@ var invoke = async function (channelID, chaincode, functionName, functionArgs) {
             response = await contract.submitTransaction(functionName, functionArgs.reviewID, functionArgs.product, functionArgs.content, functionArgs.userID, functionArgs.serviceprovider,
                 functionArgs.rating,functionArgs.createdBy, functionArgs.cts, functionArgs.uts);
 
-        } else
+        } else if(functionName == "UpdateReview"){
+            response = await contract.submitTransaction(functionName, functionArgs.id,"",true,false,functionArgs.uts);
+
+        }else{
             response = await contract.submitTransaction(functionName, functionArgs);
+
+        }
+        
 
         console.log("response", response)
         console.log('Transaction has been submitted', response);
