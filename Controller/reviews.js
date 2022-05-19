@@ -4,8 +4,9 @@ const appLogger = require("../Services/appLogger"),
   database = require("../Services/dbconnect"),
   validator = require("../Utils/validator"),
   reviewModel = require("../Models/review");
-const query = require('../query');
-let channelID = "review", chaincodeID = "review";
+const query = require("../query");
+let channelID = "review",
+  chaincodeID = "review";
 
 module.exports.createReview = async (req, res) => {
   try {
@@ -27,21 +28,26 @@ module.exports.createReview = async (req, res) => {
     const timeStamp = Date.now();
     req.body.cts = timeStamp.toString();
     req.body.uts = timeStamp.toString();
-    req.body.createdBy = "asalreview"
+    req.body.createdBy = "asalreview";
 
     const reviewId = nanoid();
     let id = req.body.userID + "_" + reviewId.substring(0, 6)
     let obj = req.body;
-    obj.reviewID = id;
+    obj.reviewID = id; //reviewId;
 
     let reviewObj = new reviewModel(obj);
 
-    let data = await invoke.invoke(channelID, chaincodeID, 'CreateReview', req.body)
+    let data = await invoke.invoke(
+      channelID,
+      chaincodeID,
+      "CreateReview",
+      req.body
+    );
 
     if (data != "") {
       return res.status(500).send({
         status: 500,
-        message: "Error from CC :" + data
+        message: "Error from CC :" + data,
       });
     }
 
@@ -81,6 +87,23 @@ module.exports.getReviews = async (req, res) => {
         userID: userID,
       });
     }
+    res.send({
+      status: 200,
+      message: "success",
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .send({ status: 500, message: error.message, data: error.data });
+  }
+};
+
+module.exports.getAllReviews = async (req, res) => {
+  try {
+    console.log("######## Inside  getAllReviews #########");
+    let result = await reviewModel.find({});
     res.send({
       status: 200,
       message: "success",
