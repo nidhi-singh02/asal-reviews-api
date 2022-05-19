@@ -33,6 +33,12 @@ const ReviewSchema = new mongoose.Schema({
   serviceprovider: {
     type: String,
   },
+  city: {
+    type: String,
+  },
+  productType: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("reviewdetails", ReviewSchema);

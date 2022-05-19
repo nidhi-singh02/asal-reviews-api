@@ -16,6 +16,8 @@ module.exports.createReview = async (req, res) => {
     req.checkBody("userID", "userID is required").notEmpty();
     req.checkBody("serviceprovider", "serviceprovider is required").notEmpty();
     req.checkBody("product", "Product Name is required").notEmpty();
+    req.checkBody("city", "City is required").notEmpty();
+    req.checkBody("productType", "Product Type is required").notEmpty();
     let validationResult = await validator(req);
     if (!validationResult.status) {
       res.status(422).json({
@@ -31,7 +33,7 @@ module.exports.createReview = async (req, res) => {
     req.body.createdBy = "asalreview";
 
     const reviewId = nanoid();
-    let id = req.body.userID + "_" + reviewId.substring(0, 6)
+    let id = req.body.userID + "_" + reviewId.substring(0, 6);
     let obj = req.body;
     obj.reviewID = id; //reviewId;
 
@@ -120,27 +122,32 @@ module.exports.getAllReviews = async (req, res) => {
 module.exports.upvote = async (req, res) => {
   try {
     console.log("######## Inside  upvote #########");
-    const { id ,emailID } = req.params;
-    console.log("id",id,emailID)
+    const { id, emailID } = req.params;
+    console.log("id", id, emailID);
     const review = await reviewModel.findOne({ reviewID: id });
-    console.log("review", review)
+    console.log("review", review);
     // check if user has already upvoted
 
     // if (review.upvoteBy.includes(req.user.id)) {
     //   throw new Error("User has already upvoted");
     // }
     review.upvotes += 1;
-    review.upvoteBy.push(emailID);//for time being getting from req params // req.user.id
+    review.upvoteBy.push(emailID); //for time being getting from req params // req.user.id
 
     const timeStamp = Date.now();
     //DLT invoke
-    let request = { id: id, uts: timeStamp.toString() }
-    let data = await invoke.invoke(channelID, chaincodeID, 'UpdateReview', request)
+    let request = { id: id, uts: timeStamp.toString() };
+    let data = await invoke.invoke(
+      channelID,
+      chaincodeID,
+      "UpdateReview",
+      request
+    );
 
     if (data != "") {
       return res.status(500).send({
         status: 500,
-        message: "Error from CC : " + data
+        message: "Error from CC : " + data,
       });
     }
 
