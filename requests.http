@@ -56,3 +56,6 @@ Content-Type: application/json
     "serviceprovider": "Apple",
     "UserId": "qX8BHnDUSmBnE56OZMeUL"
 }
+
+### Get all reviews
+GET https://asal-review-backend.herokuapp.com/user/getAllReview
