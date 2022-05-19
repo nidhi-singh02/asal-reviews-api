@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 
 const ReviewSchema = new mongoose.Schema({
-  reviewId: {
+  reviewID: {
     type: String,
   },
-  UserId: {
+  userID: {
     type: String,
   },
   content: {
     type: String,
   },
-  productName: {
+  product: {
     type: String,
   },
   upvotes: {
@@ -18,10 +18,10 @@ const ReviewSchema = new mongoose.Schema({
     default: 0,
   },
   upvoteBy: [{ type: String }], // assign user id
-  createdTs: {
+  cts: {
     type: Date,
   },
-  updateTs: {
+  uts: {
     type: Date,
   },
   report: {

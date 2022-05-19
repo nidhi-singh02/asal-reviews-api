@@ -12,7 +12,7 @@ module.exports.createReview = async (req, res) => {
   try {
     console.log("######## Inside Create Review #########");
     req.checkBody("rating", "Please provide Rating").notEmpty();
-    req.checkBody("content", "Please enter your Content").notEmpty();
+    req.checkBody("content", "Please provide Content").notEmpty();
     req.checkBody("userID", "userID is required").notEmpty();
     req.checkBody("serviceprovider", "serviceprovider is required").notEmpty();
     req.checkBody("product", "Product Name is required").notEmpty();
@@ -30,10 +30,8 @@ module.exports.createReview = async (req, res) => {
     req.body.uts = timeStamp.toString();
     req.body.createdBy = "asalreview";
 
-    let id = req.body.userID + makeid(5);
-    console.log(id, "MAKEID");
-
     const reviewId = nanoid();
+    let id = req.body.userID + "_" + reviewId.substring(0, 6)
     let obj = req.body;
     obj.reviewID = id; //reviewId;
 
@@ -71,7 +69,7 @@ module.exports.createReview = async (req, res) => {
 module.exports.getReviews = async (req, res) => {
   try {
     console.log("######## Inside  GetReview #########");
-    let { rating, serviceprovider, UserId } = req.body;
+    let { rating, serviceprovider, userID } = req.body;
     let result;
     if (rating) {
       result = await reviewModel.find({
@@ -83,9 +81,10 @@ module.exports.getReviews = async (req, res) => {
         serviceprovider: serviceprovider,
       });
     }
-    if (UserId) {
+
+    if (userID) {
       result = await reviewModel.find({
-        UserId: UserId,
+        userID: userID,
       });
     }
     res.send({
@@ -121,14 +120,30 @@ module.exports.getAllReviews = async (req, res) => {
 module.exports.upvote = async (req, res) => {
   try {
     console.log("######## Inside  upvote #########");
-    const { id } = req.params;
-    const review = await reviewModel.findOne({ reviewId: id });
+    const { id ,emailID } = req.params;
+    console.log("id",id,emailID)
+    const review = await reviewModel.findOne({ reviewID: id });
+    console.log("review", review)
     // check if user has already upvoted
-    if (review.upvoteBy.includes(req.user.id)) {
-      throw new Error("User has already upvoted");
-    }
+
+    // if (review.upvoteBy.includes(req.user.id)) {
+    //   throw new Error("User has already upvoted");
+    // }
     review.upvotes += 1;
-    review.upvoteBy.push(req.user.id);
+    review.upvoteBy.push(emailID);//for time being getting from req params // req.user.id
+
+    const timeStamp = Date.now();
+    //DLT invoke
+    let request = { id: id, uts: timeStamp.toString() }
+    let data = await invoke.invoke(channelID, chaincodeID, 'UpdateReview', request)
+
+    if (data != "") {
+      return res.status(500).send({
+        status: 500,
+        message: "Error from CC : " + data
+      });
+    }
+
     const result = await review.save();
     res.send({
       status: 200,
@@ -142,13 +157,3 @@ module.exports.upvote = async (req, res) => {
       .send({ status: 500, message: error.message, data: error.data });
   }
 };
-
-function makeid(length) {
-  var result = "";
-  var characters = "0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
