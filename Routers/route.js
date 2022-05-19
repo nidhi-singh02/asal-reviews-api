@@ -5,6 +5,7 @@ const express = require("express"),
 
 route.post("/user/createReview", reviewController.createReview);
 route.post("/user/getReview", reviewController.getReviews);
+route.post("/user/getAllReview", reviewController.getAllReviews);
 route.get("/user/upvote/:id", reviewController.upvote);
 route.post("/user/signup", userController.signup);
 route.post("/user/signin", userController.signin);
